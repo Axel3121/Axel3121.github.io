@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="nb">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; form-action 'none'; img-src data:; style-src 'sha256-esrax+qdr8+5PQ57uatBwk0IHoO3LaOtSgHpaUYmgMc='; script-src 'sha256-6YzRhC/CtzdATL0Rkw9BuTc6AU2l4GXWLnmSEpcHQ+Y='">
+  <meta name="referrer" content="no-referrer">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" href="data:,">
+  <title>Retur fra Enable Banking</title>
+  <style>
+    body { max-width: 40rem; margin: 2rem auto; padding: 0 1rem; font-family: system-ui, sans-serif; }
+    textarea { box-sizing: border-box; width: 100%; }
+    dd { overflow-wrap: anywhere; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Retur fra Enable Banking</h1>
+    <noscript><p>Kopier hele adressen fra nettleserens adressefelt tilbake til terminalen.</p></noscript>
+    <p id="missing" hidden>Ingen kode eller feil i adressen. Denne siden åpnes etter BankID.</p>
+    <section id="code-section" hidden>
+      <h2><label for="code">Autorisasjonskode</label></h2>
+      <textarea id="code" rows="3" readonly spellcheck="false"></textarea>
+      <p>Kopier helst hele adressen fra adressefeltet og lim den inn i terminalen der <code>okonomi</code> venter. Du kan også markere og kopiere selve koden fra feltet.</p>
+    </section>
+    <section id="error-section" hidden>
+      <h2>Feil fra Enable Banking</h2>
+      <dl>
+        <dt>Feilkode (<code>error</code>)</dt>
+        <dd id="error"></dd>
+        <dt>Beskrivelse (<code>error_description</code>)</dt>
+        <dd id="error-description"></dd>
+      </dl>
+      <p>Kopier hele adressen fra adressefeltet og lim den inn i terminalen der <code>okonomi</code> venter.</p>
+    </section>
+    <section id="query-section" hidden>
+      <h2><label for="query">Hele spørringsstrengen</label></h2>
+      <textarea id="query" rows="4" readonly spellcheck="false"></textarea>
+    </section>
+  </main>
+  <script>
+    const query = window.location.search;
+    const params = new URLSearchParams(query);
+    const code = params.get('code');
+    const hasError = params.has('error');
+
+    document.getElementById('query').value = query;
+    document.getElementById('query-section').hidden = false;
+    document.getElementById('missing').hidden = Boolean(code || hasError);
+
+    if (code) {
+      document.getElementById('code').value = code;
+      document.getElementById('code-section').hidden = false;
+    }
+    if (hasError) {
+      document.getElementById('error').textContent = params.get('error') || 'Ingen verdi oppgitt.';
+      document.getElementById('error-description').textContent = params.get('error_description') || 'Ingen beskrivelse oppgitt.';
+      document.getElementById('error-section').hidden = false;
+    }
+  </script>
+</body>
+</html>
